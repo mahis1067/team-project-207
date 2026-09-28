@@ -20,7 +20,7 @@ This contract sets out shared expectations and commitments for how our team will
 
 * Discord Server for communication 
 
-* Each teammate must respond to messages within 24 hours, unless further 
+* Each teammate must respond/react to messages within 24 hours, unless communicated
 
 * Anything related to deadlines, issues, asking for help etc must be communicated with the team in the server, avoid private messages
 
