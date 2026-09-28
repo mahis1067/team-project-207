@@ -6,8 +6,6 @@ After you reflect on past teamwork experiences and brainstorm a list of actions 
 
 Once you have all agreed on the contents of the team contract, make a PR to merge your team contract into the main branch of your team's repo on GitHub.
 
-**Please remember to remove any of the initial instruction text when your team finalizes your team contract; it should resemble the provided sample once complete, but with details specific to the expectations and norms agreed to by your entire team.**
-
 ---
 ## Purpose of this Contract
 
@@ -26,15 +24,15 @@ This contract sets out shared expectations and commitments for how our team will
 
 * Respectful and inclusive behaviour are necessary for smooth and productive communication
   - Hearing our everyones ideas
-  - Constant transparency for 
+  - Constant transparency in communication, conflict, deadlines etc
 
 ---
 
 ### [Other Categories of norms and expectations go here]
 
-* Based on your previous teamwork experiences, what other behaviours do you agree upon as a team?
-    - Issues must be created for bugs, features, etc and branches will be made from that
-    - No change must be made in the main branch other than merges
+
+* Issues must be created for bugs, features, etc and branches will be made from that
+* No change must be made in the main branch other than merges
 
 ---
 
@@ -47,18 +45,17 @@ This contract sets out shared expectations and commitments for how our team will
 
 * Conflict must be resolved as a group
 * All voices must be heard
-* 
 
 ---
 
 ## Accountability
 
-* Each person must hold full responsibility for changes they make on issues
-* Avoid making changes/reviewing issues without consulting the group or the person assigned to that issue
-* If you used AI on any issue, specify which lines of code AI generated
+* Each person must hold full responsibility for the commits they make
+* Avoid making changes/reviewing to other people's issues without consulting the group or the person assigned to that issue
+* If you used AI on any issue, specify which lines of code/which commits
 
 By signing below, we acknowledge that we have read, discussed, and agreed to these terms. We understand that this contract is binding for the duration of the course and may be revised with the agreement of all team members.
 
 Team Member Signatures:
 
-(type names here)
+Mahi Shah
