@@ -4,7 +4,8 @@
 
 ## Validation
 
-- [ ] CheckStyle Passes (Details in course notes)
+- [ ] CheckStyle Passes (Details in course notes code-style-and-documentation.md)
+- [ ] JavaDoc included (Details in course notes code-style-and-documentation.md)
 - [ ] All written test passed
 
 ## Checklist
