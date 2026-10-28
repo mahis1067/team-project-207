@@ -4,8 +4,8 @@
 
 ## Validation
 
+- [ ] CheckStyle Passes (Details in course notes)
 - [ ] All written test passed
-- [ ] Manual testing, if applicable:
 
 ## Checklist
 
