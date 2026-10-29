@@ -37,7 +37,7 @@ git checkout 12-add-expense-entity
 | `test/` | Adding or changing tests | `test/AddExpenseInteractor` |
 | `bug/` | Fixing a reported bug | `bug/login crashes on empty username` |
 
-Use another clear prefix if none of these fit (for example `docs/` or `refactor/`).
+Use another clear prefix if none of these fit (for example `` or `refactor/`).
 
 ### 4. Push your branch
 
