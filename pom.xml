@@ -32,45 +32,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.2</version>
             </plugin>
-
-            <!-- Checkstyle version used by CSC207 Course Notes -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.6.0</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>10.26.1</version>
-                    </dependency>
-                </dependencies>
-
-                <configuration>
-                    <configLocation>checkstyle/google_checks.xml</configLocation>
-                    <suppressionsLocation>checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
-                    <consoleOutput>true</consoleOutput>
-                    <failsOnError>true</failsOnError>
-                    <violationSeverity>warning</violationSeverity>
-                    <includeTestSourceDirectory>false</includeTestSourceDirectory>
-                </configuration>
-
-            </plugin>
-
-            <!-- Google Java formatter used by CSC207 Course Notes -->
-            <plugin>
-                <groupId>com.diffplug.spotless</groupId>
-                <artifactId>spotless-maven-plugin</artifactId>
-                <version>2.43.0</version>
-                <configuration>
-                    <java>
-                        <googleJavaFormat>
-                            <version>1.17.0</version>
-                        </googleJavaFormat>
-                    </java>
-                </configuration>
-            </plugin>
-
         </plugins>
     </build>
 </project>
