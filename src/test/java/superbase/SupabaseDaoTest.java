@@ -97,14 +97,14 @@ class SupabaseDaoTest {
     }
 
     /**
-     * Verifies that a pending friend request can be accepted.
+     * Verifies that a sent friend request can be accepted.
      *
      * @throws Exception if a database operation fails
      */
     @Test
     void friendRequestCanBeAccepted() throws Exception {
         UUID id = friendships.sendRequest(userA, userB);
-        assertEquals("PENDING", friendships.getStatus(id));
+        assertEquals("SENT_REQUEST", friendships.getStatus(id));
         friendships.accept(id);
         assertEquals("ADDED", friendships.getStatus(id));
     }

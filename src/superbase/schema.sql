@@ -13,7 +13,7 @@ create table if not exists friendships (
     id uuid primary key default gen_random_uuid(),
     requested_by uuid not null references users(id) on delete cascade,
     sent_to uuid not null references users(id) on delete cascade,
-    status varchar(20) not null default 'PENDING',
+    status varchar(20) not null default 'SENT_REQUEST',
     added_at timestamptz,
     unique (requested_by, sent_to),
     check (requested_by <> sent_to)
@@ -74,3 +74,6 @@ alter table expenses enable row level security;
 alter table group_expenses enable row level security;
 alter table expense_shares enable row level security;
 alter table notifications enable row level security;
+
+-- The application connects through the backend JDBC role. No public API
+-- policies are created so the Supabase client API cannot access these tables.

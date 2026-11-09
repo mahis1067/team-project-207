@@ -18,14 +18,15 @@ public class SupabaseFriendshipDao {
     }
 
     /**
-     * Creates a pending friend request.
+     * Creates a sent friend request.
      * @param requestedBy sender id
      * @param sentTo receiver id
      * @return the friendship id
      * @throws SQLException if the pair already exists or ids are invalid
      */
     public UUID sendRequest(UUID requestedBy, UUID sentTo) throws SQLException {
-        String sql = "insert into friendships (requested_by, sent_to) values (?, ?) returning id";
+        String sql = "insert into friendships "
+                + "(requested_by, sent_to, status) values (?, ?, 'SENT_REQUEST') returning id";
         try (Connection c = source.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setObject(1, requestedBy);
