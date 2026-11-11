@@ -47,8 +47,69 @@ public class Expense {
         this.participants = new ArrayList<>(participants);
         this.dateCreated = dateCreated;
         this.statusAll = statusAll;
-
-
     }
 
+    /** Returns the expense's unique identifier.
+     *
+     * @return the unique identifier of this expense
+     */
+    public UUID getExpenseId() {
+        return expenseId;
+    }
+
+    /** Returns the expense description.
+     *
+     * @return what the purchase was for
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /** Returns the purchase amount.
+     *
+     * @return the total purchase amount
+     */
+    public double getAmount() {
+        return amount;
+    }
+
+    /** Returns the user who created the expense.
+     *
+     * @return the user who entered the expense
+     */
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    /** Returns the payer.
+     *
+     * @return the user who paid
+     */
+    public User getPayer() {
+        return payer;
+    }
+
+    /** Returns a list of users related to the expense.
+     *
+     * @return a copy of the users included in the expense
+     */
+    public List<User> getParticipants() {
+        return new ArrayList<>(participants);
+    }
+
+    /** Returns the time the expense was created.
+     *
+     * @return when the expense record was created
+     */
+    public LocalDateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    /** Returns the status of the expense.
+     *
+     * @return the expense status
+     */
+    public String getStatusAll() {
+        return statusAll;
+    }
 }
