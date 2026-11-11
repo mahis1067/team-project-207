@@ -8,6 +8,7 @@ import java.util.UUID;
 
 /** Represents an expense between a certain number of users. */
 public class Expense {
+
     private UUID expenseId;
     private String description;
     private double amount;
