@@ -9,91 +9,99 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-/** Tests the Expense entity. */
+/**
+ * Tests the Expense entity.
+ */
 class ExpenseTest {
 
-    /** Tests that constructor correctly initializes expenses. */
-    @Test
-    void constructorInitializesFields() {
-        UUID expenseId = UUID.randomUUID();
+  /**
+   * Tests that constructor correctly initializes expenses.
+   */
+  @Test
+  void constructorInitializesFields() {
+    UUID expenseId = UUID.randomUUID();
 
-        User creator = new User(UUID.randomUUID(), "creator", "hash", "Test", "Creator", new ArrayList<>());
-        User payer = new User(UUID.randomUUID(), "payer", "hash", "Test", "Payer", new ArrayList<>());
+    User creator = new User(UUID.randomUUID(), "creator", "hash", "Test", "Creator", new ArrayList<>());
+    User payer = new User(UUID.randomUUID(), "payer", "hash", "Test", "Payer", new ArrayList<>());
 
-        List<User> participants = new ArrayList<>();
-        participants.add(creator);
-        participants.add(payer);
+    List<User> participants = new ArrayList<>();
+    participants.add(creator);
+    participants.add(payer);
 
-        LocalDateTime dateCreated = LocalDateTime.of(2026, 10, 10, 10, 10);
+    LocalDateTime dateCreated = LocalDateTime.of(2026, 10, 10, 10, 10);
 
-        Expense expense =
-                new Expense(
-                        expenseId,
-                        "Groceries",
-                        10.10,
-                        creator,
-                        payer,
-                        participants,
-                        dateCreated,
-                        "pending");
+    Expense expense =
+            new Expense(
+                    expenseId,
+                    "Groceries",
+                    10.10,
+                    creator,
+                    payer,
+                    participants,
+                    dateCreated,
+                    "pending");
 
-        assertEquals(expenseId, expense.getExpenseId());
-        assertEquals("Groceries", expense.getDescription());
-        assertEquals(10.10, expense.getAmount());
-        assertEquals(creator, expense.getCreatedBy());
-        assertEquals(payer, expense.getPayer());
-        assertEquals(participants, expense.getParticipants());
-        assertEquals(dateCreated, expense.getDateCreated());
-        assertEquals("pending", expense.getStatusAll());
-    }
+    assertEquals(expenseId, expense.getExpenseId());
+    assertEquals("Groceries", expense.getDescription());
+    assertEquals(10.10, expense.getAmount());
+    assertEquals(creator, expense.getCreatedBy());
+    assertEquals(payer, expense.getPayer());
+    assertEquals(participants, expense.getParticipants());
+    assertEquals(dateCreated, expense.getDateCreated());
+    assertEquals("pending", expense.getStatusAll());
+  }
 
-    /** Tests that changes to the participants list do not affect the expense. */
-    @Test
-    void constructorCopiesParticipantsList() {
-        User user = new User(UUID.randomUUID(), "testuser", "hash", "Test", "User", new ArrayList<>());
+  /**
+   * Tests that changes to the participants list do not affect the expense.
+   */
+  @Test
+  void constructorCopiesParticipantsList() {
+    User user = new User(UUID.randomUUID(), "testuser", "hash", "Test", "User", new ArrayList<>());
 
-        List<User> participants = new ArrayList<>();
-        participants.add(user);
+    List<User> participants = new ArrayList<>();
+    participants.add(user);
 
-        Expense expense =
-                new Expense(
-                        UUID.randomUUID(),
-                        "Groceries",
-                        10.10,
-                        user,
-                        user,
-                        participants,
-                        LocalDateTime.of(2026, 10, 10, 10, 10),
-                        "pending");
+    Expense expense =
+            new Expense(
+                    UUID.randomUUID(),
+                    "Groceries",
+                    10.10,
+                    user,
+                    user,
+                    participants,
+                    LocalDateTime.of(2026, 10, 10, 10, 10),
+                    "pending");
 
-        participants.clear();
+    participants.clear();
 
-        assertEquals(1, expense.getParticipants().size());
-        assertEquals(user, expense.getParticipants().get(0));
-    }
+    assertEquals(1, expense.getParticipants().size());
+    assertEquals(user, expense.getParticipants().get(0));
+  }
 
-    /** Tests that modifying a returned list does not change the expense. */
-    @Test
-    void getterReturnsParticipantsListCopy() {
-        User user = new User(UUID.randomUUID(), "testuser", "hash", "Test", "User", new ArrayList<>());
+  /**
+   * Tests that modifying a returned list does not change the expense.
+   */
+  @Test
+  void getterReturnsParticipantsListCopy() {
+    User user = new User(UUID.randomUUID(), "testuser", "hash", "Test", "User", new ArrayList<>());
 
-        List<User> participants = new ArrayList<>();
-        participants.add(user);
+    List<User> participants = new ArrayList<>();
+    participants.add(user);
 
-        Expense expense =
-                new Expense(
-                        UUID.randomUUID(),
-                        "Groceries",
-                        10.10,
-                        user,
-                        user,
-                        participants,
-                        LocalDateTime.of(2026, 10, 10, 10, 10),
-                        "pending");
+    Expense expense =
+            new Expense(
+                    UUID.randomUUID(),
+                    "Groceries",
+                    10.10,
+                    user,
+                    user,
+                    participants,
+                    LocalDateTime.of(2026, 10, 10, 10, 10),
+                    "pending");
 
-        expense.getParticipants().clear();
+    expense.getParticipants().clear();
 
-        assertEquals(1, expense.getParticipants().size());
-        assertEquals(user, expense.getParticipants().get(0));
-    }
+    assertEquals(1, expense.getParticipants().size());
+    assertEquals(user, expense.getParticipants().get(0));
+  }
 }
