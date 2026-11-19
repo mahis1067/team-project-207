@@ -117,7 +117,7 @@ class SupabaseDaoTest {
     @Test
     void notificationReachesReceiverAndCanBeMarkedRead() throws Exception {
         notifications.send(userA, userB, "FRIEND_REQUEST", "{\"hello\":true}");
-        List<SupabaseNotificationDao.NotificationRow> inbox = notifications.getUnread(userB);
+        var inbox = notifications.getUnread(userB);
         assertEquals(1, inbox.size());
         assertEquals("FRIEND_REQUEST", inbox.get(0).type());
         assertTrue(notifications.getUnread(userA).isEmpty());   // sender has nothing
