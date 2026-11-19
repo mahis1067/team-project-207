@@ -57,13 +57,13 @@ class LoginRefreshFailureTest {
                 refresh,
                 session);
 
-        RefreshFailureException exception = assertThrows(
-                RefreshFailureException.class,
-                () -> login.execute(
-                        new LoginInputData("testuser", "password123")));
+        login.execute(
+                new LoginInputData("testuser", "password123"));
 
-        assertEquals("User not found.", exception.getMessage());
         assertEquals("User not found.", refreshPresenter.errorMessage);
+        assertEquals(
+                "Login failed because user data could not be refreshed.",
+                loginPresenter.errorMessage);
         assertEquals(0, loginPresenter.successCount);
         assertNull(session.getCurrentUserId());
     }
@@ -72,6 +72,7 @@ class LoginRefreshFailureTest {
             implements LoginOutputBoundary {
 
         private int successCount;
+        private String errorMessage;
 
         @Override
         public void prepareSuccessView(LoginOutputData outputData) {
@@ -80,7 +81,7 @@ class LoginRefreshFailureTest {
 
         @Override
         public void prepareFailView(String message) {
-            // Not used in this test.
+            errorMessage = message;
         }
     }
 

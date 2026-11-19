@@ -109,6 +109,32 @@ class RefreshInteractorTest {
                         .get(1).getUsername());
     }
 
+    @Test
+    void testDatabaseFailure() {
+        TestContext context = new TestContext();
+
+        IllegalStateException databaseError =
+                new IllegalStateException("Database unavailable");
+
+        RefreshDataAccessInterface dao = id -> {
+            throw databaseError;
+        };
+
+        RefreshInteractor interactor =
+                new RefreshInteractor(dao, context.presenter);
+
+        RefreshFailureException exception = assertThrows(
+                RefreshFailureException.class,
+                () -> interactor.execute(new RefreshInputData(
+                        Collections.singletonList(
+                                context.user.getUserId()))));
+
+        assertEquals("Failed to refresh user data.",
+                exception.getMessage());
+        assertSame(databaseError, exception.getCause());
+        assertFailure(context, "Failed to refresh user data.");
+    }
+
     private static void assertFailure(
             TestContext context, String expectedError) {
         assertEquals(expectedError, context.presenter.errorMessage);

@@ -39,7 +39,14 @@ public class RefreshInteractor implements RefreshInputBoundary {
                 throw new RefreshFailureException("User ID cannot be null.");
             }
 
-            User user = dataAccess.getUserById(userId);
+            User user;
+            try {
+                user = dataAccess.getUserById(userId);
+            } catch (IllegalStateException exception) {
+                presenter.prepareFailView("Failed to refresh user data.");
+                throw new RefreshFailureException(
+                        "Failed to refresh user data.", exception);
+            }
 
             if (user == null) {
                 presenter.prepareFailView("User not found.");

@@ -2,6 +2,7 @@ package app_business_rules.login;
 
 import app_business_rules.PasswordHasher;
 import app_business_rules.logout.SessionState;
+import app_business_rules.refresh.RefreshFailureException;
 import app_business_rules.refresh.RefreshInputBoundary;
 import app_business_rules.refresh.RefreshInputData;
 import entities.users.User;
@@ -100,12 +101,11 @@ class LoginInteractorTest {
         TestContext context = new TestContext();
         context.refresh.failOnRefresh = true;
 
-        IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
-                () -> context.execute("testuser", "password123"));
+        context.execute("testuser", "password123");
 
-        assertEquals("Simulated refresh failure",
-                exception.getMessage());
+        assertEquals(
+                "Login failed because user data could not be refreshed.",
+                context.presenter.errorMessage);
         assertNull(context.presenter.successData);
         assertEquals(1, context.refresh.callCount);
         assertNull(context.session.getCurrentUserId());
@@ -209,7 +209,7 @@ class LoginInteractorTest {
             callCount++;
 
             if (failOnRefresh) {
-                throw new IllegalStateException("Simulated refresh failure");
+                throw new RefreshFailureException("Simulated refresh failure");
             }
         }
     }

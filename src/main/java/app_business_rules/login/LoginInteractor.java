@@ -4,6 +4,7 @@ import app_business_rules.PasswordHasher;
 import app_business_rules.logout.SessionState;
 import app_business_rules.refresh.RefreshInputBoundary;
 import app_business_rules.refresh.RefreshInputData;
+import app_business_rules.refresh.RefreshFailureException;
 import entities.users.User;
 
 import java.util.Collections;
@@ -63,8 +64,14 @@ public class LoginInteractor implements LoginInputBoundary {
             return;
         }
 
-        refresh.execute(new RefreshInputData(
-                Collections.singletonList(user.getUserId())));
+        try {
+            refresh.execute(new RefreshInputData(
+                    Collections.singletonList(user.getUserId())));
+        } catch (RefreshFailureException exception) {
+            presenter.prepareFailView(
+                    "Login failed because user data could not be refreshed.");
+            return;
+        }
 
         sessionState.setCurrentUserId(user.getUserId());
 
