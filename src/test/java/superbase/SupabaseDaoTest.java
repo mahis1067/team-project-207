@@ -110,6 +110,19 @@ class SupabaseDaoTest {
     }
 
     /**
+     * Verifies that a sent friend request can be denied.
+     *
+     * @throws Exception if a database operation fails
+     */
+    @Test
+    void friendRequestCanBeDenied() throws Exception {
+        friendships.sendRequest(userA, userB);
+        assertEquals("SENT_REQUEST", friendships.getStatusByUsers(userB, userA));
+        friendships.deny(userB, userA);
+        assertNull(friendships.getStatusByUsers(userB, userA));
+    }
+
+    /**
      * Verifies that notifications are delivered and can be marked as read.
      *
      * @throws Exception if a database operation fails
