@@ -60,12 +60,4 @@ public class Friendship {
   public LocalDateTime getAddedAt() {
     return addedAt;
   }
-
-  /**
-   * Accepts this friendship request.
-   */
-  public void accept() {
-    status = FriendshipStatus.ADDED;
-    addedAt = LocalDateTime.now();
-  }
 }
