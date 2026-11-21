@@ -110,6 +110,19 @@ class SupabaseDaoTest {
     }
 
     /**
+     * Verifies that a sent friend request can be denied.
+     *
+     * @throws Exception if a database operation fails
+     */
+    @Test
+    void friendRequestCanBeDenied() throws Exception {
+        friendships.sendRequest(userA, userB);
+        assertEquals("SENT_REQUEST", friendships.getStatusByUsers(userB, userA));
+        friendships.deny(userB, userA);
+        assertNull(friendships.getStatusByUsers(userB, userA));
+    }
+
+    /**
      * Verifies that notifications are delivered and can be marked as read.
      *
      * @throws Exception if a database operation fails
@@ -117,7 +130,7 @@ class SupabaseDaoTest {
     @Test
     void notificationReachesReceiverAndCanBeMarkedRead() throws Exception {
         notifications.send(userA, userB, "FRIEND_REQUEST", "{\"hello\":true}");
-        List<SupabaseNotificationDao.NotificationRow> inbox = notifications.getUnread(userB);
+        var inbox = notifications.getUnread(userB);
         assertEquals(1, inbox.size());
         assertEquals("FRIEND_REQUEST", inbox.get(0).type());
         assertTrue(notifications.getUnread(userA).isEmpty());   // sender has nothing
