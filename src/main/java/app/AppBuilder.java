@@ -13,9 +13,9 @@ import javax.swing.JPanel;
 public class AppBuilder {
 
     /** Default window width in pixels. */
-    private static final int WINDOW_WIDTH = 500;
+    private static final int WINDOW_WIDTH = 960;
     /** Default window height in pixels. */
-    private static final int WINDOW_HEIGHT = 450;
+    private static final int WINDOW_HEIGHT = 640;
 
     /** Panel holding every screen, stacked like cards. */
     private final JPanel views = new JPanel();
