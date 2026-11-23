@@ -5,6 +5,9 @@ import interface_adapters.view_manager.ViewManagerModel;
 import java.awt.CardLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import frameworks_and_drivers.view.LoginView;
+import interface_adapters.login.LoginViewModel;
+import interface_adapters.view_manager.ViewNames;
 
 /**
  * Builds the application: creates every view, wires every use case,
@@ -25,6 +28,8 @@ public class AppBuilder {
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     /** Switches screens when the model changes. */
     private final ViewManager viewManager;
+    /** State shared by the login screen and its presenter. */
+    private final LoginViewModel loginViewModel = new LoginViewModel();
 
     /** Sets up the card layout and the view manager. */
     public AppBuilder() {
@@ -32,9 +37,23 @@ public class AppBuilder {
         viewManager = new ViewManager(views, cardLayout, viewManagerModel);
     }
 
-    // TODO (#14): addLoginView, addSignupView, addDashboardView,
-    //             addFriendsView, addExpenseView
+    /**
+     * Adds the login screen.
+     *
+     * @return this builder
+     */
+    public AppBuilder addLoginView() {
+        LoginView loginView = new LoginView(loginViewModel, viewManagerModel);
+        views.add(loginView, ViewNames.LOGIN);
+        return this;
+    }
+
+    // TODO (#14): addSignupView
+    // TODO (#14): addDashboardView
+    // TODO (#14): addFriendsView
+    // TODO (#14): addExpenseView
     // TODO (#14): addAuthUseCases (login, signup, logout)
+
     // TODO (teammates): add a method per use case, e.g.
     //   addExpenseUseCase, updateExpenseUseCase, confirmExpenseUseCase,
     //   addFriendUseCase, createGroupUseCase, manageMembersUseCase,
@@ -46,6 +65,7 @@ public class AppBuilder {
      * @return the application frame
      */
     public JFrame build() {
+        viewManagerModel.setActiveView(ViewNames.LOGIN);
         JFrame frame = new JFrame("Budget Tracker");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(views);
