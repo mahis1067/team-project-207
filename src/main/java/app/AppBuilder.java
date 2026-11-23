@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import frameworks_and_drivers.view.LoginView;
 import interface_adapters.login.LoginViewModel;
 import interface_adapters.view_manager.ViewNames;
+import frameworks_and_drivers.view.SignupView;
+import interface_adapters.signup.SignUpViewModel;
 
 /**
  * Builds the application: creates every view, wires every use case,
@@ -30,6 +32,8 @@ public class AppBuilder {
     private final ViewManager viewManager;
     /** State shared by the login screen and its presenter. */
     private final LoginViewModel loginViewModel = new LoginViewModel();
+    /** State shared by the sign-up screen and its presenter. */
+    private final SignUpViewModel signUpViewModel = new SignUpViewModel();
 
     /** Sets up the card layout and the view manager. */
     public AppBuilder() {
@@ -48,10 +52,24 @@ public class AppBuilder {
         return this;
     }
 
-    // TODO (#14): addSignupView
+    /**
+     * Adds the sign-up screen.
+     *
+     * @return this builder
+     */
+    public AppBuilder addSignupView() {
+        SignupView signupView =
+                new SignupView(signUpViewModel, viewManagerModel);
+        views.add(signupView, ViewNames.SIGNUP);
+        return this;
+    }
+
     // TODO (#14): addDashboardView
+
     // TODO (#14): addFriendsView
+
     // TODO (#14): addExpenseView
+
     // TODO (#14): addAuthUseCases (login, signup, logout)
 
     // TODO (teammates): add a method per use case, e.g.
