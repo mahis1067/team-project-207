@@ -11,7 +11,9 @@ import javax.swing.JPanel;
  */
 public class ViewManager implements PropertyChangeListener {
 
+    /** Panel holding every screen. */
     private final JPanel views;
+    /** Layout used to show one screen at a time. */
     private final CardLayout cardLayout;
 
     /**

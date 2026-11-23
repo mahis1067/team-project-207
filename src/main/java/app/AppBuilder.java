@@ -12,9 +12,18 @@ import javax.swing.JPanel;
  */
 public class AppBuilder {
 
+    /** Default window width in pixels. */
+    private static final int WINDOW_WIDTH = 500;
+    /** Default window height in pixels. */
+    private static final int WINDOW_HEIGHT = 450;
+
+    /** Panel holding every screen, stacked like cards. */
     private final JPanel views = new JPanel();
+    /** Layout that shows one screen at a time. */
     private final CardLayout cardLayout = new CardLayout();
+    /** Model storing which screen is active. */
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
+    /** Switches screens when the model changes. */
     private final ViewManager viewManager;
 
     /** Sets up the card layout and the view manager. */
@@ -30,6 +39,7 @@ public class AppBuilder {
     //   addExpenseUseCase, updateExpenseUseCase, confirmExpenseUseCase,
     //   addFriendUseCase, createGroupUseCase, manageMembersUseCase,
     //   viewDashboardUseCase, viewHistoryUseCase
+
     /**
      * Builds the main window.
      *
@@ -39,7 +49,7 @@ public class AppBuilder {
         JFrame frame = new JFrame("Budget Tracker");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(views);
-        frame.setSize(500, 450);
+        frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         frame.setLocationRelativeTo(null);
         return frame;
     }

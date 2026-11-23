@@ -12,8 +12,10 @@ public class ViewManagerModel {
     /** Property name fired when the active view changes. */
     public static final String ACTIVE_VIEW = "activeView";
 
+    /** Notifies listeners when the active view changes. */
     private final PropertyChangeSupport support =
             new PropertyChangeSupport(this);
+    /** Name of the screen currently shown. */
     private String activeView = "";
 
     /**
