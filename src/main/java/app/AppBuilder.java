@@ -13,6 +13,7 @@ import interface_adapters.signup.SignUpViewModel;
 import frameworks_and_drivers.view.DashboardView;
 import interface_adapters.logout.LogoutViewModel;
 import frameworks_and_drivers.view.FriendsView;
+import frameworks_and_drivers.view.ExpenseView;
 
 /**
  * Builds the application: creates every view, wires every use case,
@@ -91,7 +92,15 @@ public class AppBuilder {
         return this;
     }
 
-    // TODO (#14): addExpenseView
+    /**
+     * Adds the add expense screen.
+     *
+     * @return this builder
+     */
+    public AppBuilder addExpenseView() {
+        views.add(new ExpenseView(viewManagerModel), ViewNames.EXPENSE);
+        return this;
+    }
 
     // TODO (#14): addAuthUseCases (login, signup, logout)
 

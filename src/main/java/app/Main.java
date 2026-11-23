@@ -21,6 +21,7 @@ public final class Main {
                     .addSignupView()
                     .addDashboardView()
                     .addFriendsView()
+                    .addExpenseView()
                     .build();
             app.setVisible(true);
         });
