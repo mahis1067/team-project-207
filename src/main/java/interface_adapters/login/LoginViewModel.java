@@ -1,11 +1,20 @@
 package interface_adapters.login;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.UUID;
 
 /**
  * Stores the login result for the view.
  */
 public class LoginViewModel {
+
+    /** Property name fired whenever the state changes. */
+    public static final String STATE = "state";
+
+    /** Notifies listeners when the state changes. */
+    private final PropertyChangeSupport support =
+            new PropertyChangeSupport(this);
 
     private UUID userId;
     private String username;
@@ -23,6 +32,7 @@ public class LoginViewModel {
         this.username = username;
         this.errorMessage = null;
         this.successful = true;
+        support.firePropertyChange(STATE, null, this);
     }
 
     /**
@@ -35,6 +45,16 @@ public class LoginViewModel {
         this.username = null;
         this.errorMessage = errorMessage;
         this.successful = false;
+        support.firePropertyChange(STATE, null, this);
+    }
+
+    /**
+     * Registers a listener that is notified when the state changes.
+     *
+     * @param listener the listener to add
+     */
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        support.addPropertyChangeListener(listener);
     }
 
     /**
@@ -73,3 +93,4 @@ public class LoginViewModel {
         return successful;
     }
 }
+
