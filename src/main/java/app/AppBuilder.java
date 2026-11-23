@@ -12,6 +12,7 @@ import frameworks_and_drivers.view.SignupView;
 import interface_adapters.signup.SignUpViewModel;
 import frameworks_and_drivers.view.DashboardView;
 import interface_adapters.logout.LogoutViewModel;
+import frameworks_and_drivers.view.FriendsView;
 
 /**
  * Builds the application: creates every view, wires every use case,
@@ -80,7 +81,15 @@ public class AppBuilder {
         return this;
     }
 
-    // TODO (#14): addFriendsView
+    /**
+     * Adds the friends screen.
+     *
+     * @return this builder
+     */
+    public AppBuilder addFriendsView() {
+        views.add(new FriendsView(viewManagerModel), ViewNames.FRIENDS);
+        return this;
+    }
 
     // TODO (#14): addExpenseView
 

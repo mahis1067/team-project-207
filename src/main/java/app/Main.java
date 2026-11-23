@@ -20,6 +20,7 @@ public final class Main {
                     .addLoginView()
                     .addSignupView()
                     .addDashboardView()
+                    .addFriendsView()
                     .build();
             app.setVisible(true);
         });
