@@ -10,6 +10,8 @@ import interface_adapters.login.LoginViewModel;
 import interface_adapters.view_manager.ViewNames;
 import frameworks_and_drivers.view.SignupView;
 import interface_adapters.signup.SignUpViewModel;
+import frameworks_and_drivers.view.DashboardView;
+import interface_adapters.logout.LogoutViewModel;
 
 /**
  * Builds the application: creates every view, wires every use case,
@@ -34,6 +36,8 @@ public class AppBuilder {
     private final LoginViewModel loginViewModel = new LoginViewModel();
     /** State shared by the sign-up screen and its presenter. */
     private final SignUpViewModel signUpViewModel = new SignUpViewModel();
+    /** State shared by the dashboard and the logout presenter. */
+    private final LogoutViewModel logoutViewModel = new LogoutViewModel();
 
     /** Sets up the card layout and the view manager. */
     public AppBuilder() {
@@ -64,7 +68,17 @@ public class AppBuilder {
         return this;
     }
 
-    // TODO (#14): addDashboardView
+    /**
+     * Adds the dashboard screen.
+     *
+     * @return this builder
+     */
+    public AppBuilder addDashboardView() {
+        DashboardView dashboardView = new DashboardView(
+                loginViewModel, logoutViewModel, viewManagerModel);
+        views.add(dashboardView, ViewNames.DASHBOARD);
+        return this;
+    }
 
     // TODO (#14): addFriendsView
 
