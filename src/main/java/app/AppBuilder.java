@@ -14,6 +14,27 @@ import frameworks_and_drivers.view.DashboardView;
 import interface_adapters.logout.LogoutViewModel;
 import frameworks_and_drivers.view.FriendsView;
 import frameworks_and_drivers.view.ExpenseView;
+import app_business_rules.PasswordHasher;
+import app_business_rules.login.LoginInteractor;
+import app_business_rules.logout.LogoutInteractor;
+import app_business_rules.logout.SessionState;
+import app_business_rules.refresh.RefreshInputBoundary;
+import app_business_rules.refresh.RefreshInteractor;
+import app_business_rules.signup.SignUpInteractor;
+import frameworks_and_drivers.security.Pbkdf2PasswordHasher;
+import interface_adapters.login.LoginController;
+import interface_adapters.login.LoginPresenter;
+import interface_adapters.logout.LogoutController;
+import interface_adapters.logout.LogoutPresenter;
+import interface_adapters.persistence.SupabaseAuthDataAccess;
+import interface_adapters.persistence.SupabaseRefreshDataAccess;
+import interface_adapters.refresh.RefreshPresenter;
+import interface_adapters.refresh.RefreshViewModel;
+import interface_adapters.session.InMemorySessionState;
+import interface_adapters.signup.SignUpController;
+import interface_adapters.signup.SignUpPresenter;
+import superbase.PostgresDataSource;
+import superbase.SupabaseUserDao;
 
 /**
  * Builds the application: creates every view, wires every use case,
@@ -40,6 +61,14 @@ public class AppBuilder {
     private final SignUpViewModel signUpViewModel = new SignUpViewModel();
     /** State shared by the dashboard and the logout presenter. */
     private final LogoutViewModel logoutViewModel = new LogoutViewModel();
+    /** Remembers who is logged in, shared by login and logout. */
+    private final SessionState sessionState = new InMemorySessionState();
+    /** The login screen, kept so its controller can be set. */
+    private LoginView loginView;
+    /** The sign-up screen, kept so its controller can be set. */
+    private SignupView signupView;
+    /** The dashboard, kept so its logout controller can be set. */
+    private DashboardView dashboardView;
 
     /** Sets up the card layout and the view manager. */
     public AppBuilder() {
@@ -53,7 +82,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLoginView() {
-        LoginView loginView = new LoginView(loginViewModel, viewManagerModel);
+        loginView = new LoginView(loginViewModel, viewManagerModel);
         views.add(loginView, ViewNames.LOGIN);
         return this;
     }
@@ -64,8 +93,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addSignupView() {
-        SignupView signupView =
-                new SignupView(signUpViewModel, viewManagerModel);
+        signupView = new SignupView(signUpViewModel, viewManagerModel);
         views.add(signupView, ViewNames.SIGNUP);
         return this;
     }
@@ -76,8 +104,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addDashboardView() {
-        DashboardView dashboardView = new DashboardView(
-                loginViewModel, logoutViewModel, viewManagerModel);
+        dashboardView = new DashboardView(loginViewModel, logoutViewModel, viewManagerModel);
         views.add(dashboardView, ViewNames.DASHBOARD);
         return this;
     }
@@ -102,12 +129,40 @@ public class AppBuilder {
         return this;
     }
 
-    // TODO (#14): addAuthUseCases (login, signup, logout)
+    /**
+     * Connects log in, sign up and log out to their use cases.
+     * Call this after the views are added.
+     *
+     * @return this builder
+     */
+    public AppBuilder addAuthUseCases() {
+        PostgresDataSource source = new PostgresDataSource();
+        SupabaseAuthDataAccess authDataAccess =
+                new SupabaseAuthDataAccess(new SupabaseUserDao(source));
+        PasswordHasher hasher = new Pbkdf2PasswordHasher();
+        RefreshInputBoundary refresh = new RefreshInteractor(
+                new SupabaseRefreshDataAccess(source),
+                new RefreshPresenter(new RefreshViewModel()));
+
+        loginView.setLoginController(new LoginController(
+                new LoginInteractor(authDataAccess,
+                        new LoginPresenter(loginViewModel),
+                        hasher, refresh, sessionState)));
+
+        signupView.setSignUpController(new SignUpController(
+                new SignUpInteractor(authDataAccess,
+                        new SignUpPresenter(signUpViewModel),
+                        hasher, refresh)));
+
+        dashboardView.setLogoutController(new LogoutController(
+                new LogoutInteractor(sessionState,
+                        new LogoutPresenter(logoutViewModel))));
+        return this;
+    }
 
     // TODO (teammates): add a method per use case, e.g.
     //   addExpenseUseCase, updateExpenseUseCase, confirmExpenseUseCase,
-    //   addFriendUseCase, createGroupUseCase, manageMembersUseCase,
-    //   viewDashboardUseCase, viewHistoryUseCase
+    //   addFriendUseCase, viewDashboardUseCase, viewHistoryUseCase
 
     /**
      * Builds the main window.
