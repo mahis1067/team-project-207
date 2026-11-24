@@ -130,7 +130,7 @@ class SignupViewTest {
     }
 
     private static javax.swing.JTextField findField(
-            Component component, String fieldName) {
+            final Component component, final String fieldName) {
         if (component instanceof LabelledField labelledField) {
             java.awt.BorderLayout layout =
                     (java.awt.BorderLayout) labelledField.getLayout();
@@ -160,7 +160,8 @@ class SignupViewTest {
                 "Input field not found: " + fieldName);
     }
 
-    private static boolean containsLabel(Component component, String text) {
+    private static boolean containsLabel(
+            final Component component, final String text) {
         if (component instanceof javax.swing.JLabel label
                 && text.equals(label.getText())) {
             return true;
@@ -175,7 +176,8 @@ class SignupViewTest {
         return false;
     }
 
-    private static JButton findButton(Component component, String text) {
+    private static JButton findButton(
+            final Component component, final String text) {
         if (component instanceof JButton button
                 && text.equals(button.getText())) {
             return button;
