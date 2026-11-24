@@ -52,6 +52,30 @@
                             </sources>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>add-business-rules-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/app_buisness_rules/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-interface-adapter-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/interface_adapters/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
