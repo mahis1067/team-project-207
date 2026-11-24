@@ -118,7 +118,7 @@ public class DashboardView extends JPanel implements PropertyChangeListener {
                 new JPanel(new GridLayout(1, STAT_COLUMNS, Theme.PAD, 0));
         stats.setOpaque(false);
         stats.add(statCard("You owe", "$0.00", Theme.RED));
-        stats.add(statCard("Owed to you", "$0.00", Theme.BLUE));
+        stats.add(statCard("Owed to you", "$0.00", Theme.GREEN));
         stats.add(statCard("Net balance", "$0.00", Theme.TEXT));
 
         JPanel top = new JPanel(new BorderLayout(0, Theme.PAD));
