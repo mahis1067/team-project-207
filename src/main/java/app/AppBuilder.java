@@ -104,7 +104,8 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addDashboardView() {
-        dashboardView = new DashboardView(loginViewModel, logoutViewModel, viewManagerModel);
+        dashboardView = new DashboardView(
+                loginViewModel, logoutViewModel, viewManagerModel);
         views.add(dashboardView, ViewNames.DASHBOARD);
         return this;
     }

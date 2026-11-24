@@ -21,6 +21,8 @@ import javax.swing.SwingConstants;
 /** Home screen shown after logging in. */
 public class DashboardView extends JPanel implements PropertyChangeListener {
 
+    /** Number of stat cards across the top. */
+    private static final int STAT_COLUMNS = 3;
     /** Tells the dashboard who logged in. */
     private final LoginViewModel loginViewModel;
     /** Tells the dashboard when logout succeeds. */
@@ -112,7 +114,8 @@ public class DashboardView extends JPanel implements PropertyChangeListener {
         header.add(buttons, BorderLayout.EAST);
 
         // TODO (view_dashboard use case): show the real totals.
-        JPanel stats = new JPanel(new GridLayout(1, 3, Theme.PAD, 0));
+        JPanel stats =
+                new JPanel(new GridLayout(1, STAT_COLUMNS, Theme.PAD, 0));
         stats.setOpaque(false);
         stats.add(statCard("You owe", "$0.00", Theme.RED));
         stats.add(statCard("Owed to you", "$0.00", Theme.BLUE));

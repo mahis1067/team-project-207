@@ -17,9 +17,9 @@ import javax.swing.JTextField;
 public class ExpenseView extends JPanel {
 
     /** Categories the user can pick from. */
-    private static final String[] CATEGORIES =
-            {"Food", "Transport", "Rent & bills", "Fun", "Other"};
-
+    private static final String[] CATEGORIES = {
+            "Food", "Transport", "Rent & bills", "Fun", "Other",
+    };
     /** Used to switch screens. */
     private final ViewManagerModel viewManagerModel;
     /** What the expense was for. */
