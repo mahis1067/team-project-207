@@ -16,7 +16,14 @@ public final class Main {
      */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            JFrame app = new AppBuilder().build();
+            JFrame app = new AppBuilder()
+                    .addLoginView()
+                    .addSignupView()
+                    .addDashboardView()
+                    .addFriendsView()
+                    .addExpenseView()
+                    .addAuthUseCases()
+                    .build();
             app.setVisible(true);
         });
     }
