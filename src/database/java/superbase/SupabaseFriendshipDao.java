@@ -26,7 +26,7 @@ public class SupabaseFriendshipDao {
      */
     public UUID sendRequest(UUID requestedBy, UUID sentTo) throws SQLException {
         String sql = "insert into friendships "
-                + "(requested_by, sent_to, status) values (?, ?, 'SENT_REQUEST') returning id";
+                + "(requested_by, sent_to, status) values (?, ?, 'PENDING') returning id";
         try (Connection c = source.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setObject(1, requestedBy);

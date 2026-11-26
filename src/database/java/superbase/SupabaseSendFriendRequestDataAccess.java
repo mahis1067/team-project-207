@@ -2,7 +2,6 @@ package superbase;
 
 import app_buisness_rules.friend_requests.SendFriendRequestDataAccessInterface;
 import entities.users.Friendship;
-import entities.users.FriendshipStatus;
 import entities.users.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -58,7 +57,7 @@ public class SupabaseSendFriendRequestDataAccess
       return new Friendship(
           sender,
           receiver,
-          FriendshipStatus.valueOf(status),
+          SupabaseFriendshipStatusMapper.toDomainStatus(status),
           null);
     } catch (SQLException exception) {
       throw new FriendRequestDatabaseException(

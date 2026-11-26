@@ -2,7 +2,6 @@ package superbase;
 
 import app_buisness_rules.friend_requests.DenyFriendRequestDataAccessInterface;
 import entities.users.Friendship;
-import entities.users.FriendshipStatus;
 import entities.users.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class SupabaseDenyFriendRequestDataAccess
       return new Friendship(
           requester,
           receiver,
-          FriendshipStatus.valueOf(status),
+          SupabaseFriendshipStatusMapper.toDomainStatus(status),
           null);
     } catch (SQLException exception) {
       throw new FriendRequestDatabaseException(
