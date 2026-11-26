@@ -24,6 +24,10 @@ public class NotificationsView extends JPanel {
 
     /** Used to send the user to the right screen. */
     private final ViewManagerModel viewManagerModel;
+    /** Width of every notification button, so the cards line up. */
+    private static final int BUTTON_WIDTH = 110;
+    /** Width of the Confirmed / Denied pills, so the messages line up. */
+    private static final int PILL_WIDTH = 100;
     /** Notifications that still need an answer. */
     private final JPanel actionCards = verticalPanel();
     /** Notifications that were already answered. */
@@ -122,6 +126,7 @@ public class NotificationsView extends JPanel {
         } else {
             pill = Theme.tag("Denied", Theme.RED, Theme.WHITE);
         }
+        sizeToWidth(pill, PILL_WIDTH);
         JPanel pillHolder = new JPanel(new GridBagLayout());
         pillHolder.setOpaque(false);
         pillHolder.add(pill);
@@ -156,6 +161,8 @@ public class NotificationsView extends JPanel {
 
         JButton yesButton = Theme.primaryButton(yesText);
         JButton noButton = Theme.secondaryButton(noText);
+        sizeToWidth(yesButton, BUTTON_WIDTH);
+        sizeToWidth(noButton, BUTTON_WIDTH);
         // TODO: once the confirm expense / friend request use cases are
         //  wired here, call their controllers instead of only navigating.
         yesButton.addActionListener(
@@ -191,6 +198,11 @@ public class NotificationsView extends JPanel {
         list.add(card);
         list.revalidate();
         list.repaint();
+    }
+
+    private static void sizeToWidth(JComponent component, int width) {
+        component.setPreferredSize(new Dimension(
+                width, component.getPreferredSize().height));
     }
 
     private static JPanel verticalPanel() {

@@ -11,12 +11,7 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 
 /** Colours, fonts and styled components shared by every screen. */
@@ -153,18 +148,33 @@ final class Theme {
     }
 
     /**
-     * Creates a small coloured status tag, like "Pending".
+     * Makes a small rounded tag, like "Expense" or "Confirmed".
      *
      * @param text the tag text
-     * @param background the tag colour
+     * @param background the fill colour
      * @param foreground the text colour
-     * @return the tag label
+     * @return the tag
      */
     static JLabel tag(String text, Color background, Color foreground) {
-        JLabel tag = label(text, SMALL.deriveFont(Font.BOLD), foreground);
-        tag.setOpaque(true);
+        JLabel tag = new JLabel(text, SwingConstants.CENTER) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(getBackground());
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(),
+                        getHeight(), getHeight());
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        tag.setOpaque(false);
         tag.setBackground(background);
-        tag.setBorder(BorderFactory.createEmptyBorder(2, GAP, 2, GAP));
+        tag.setForeground(foreground);
+        tag.setFont(SMALL.deriveFont(Font.BOLD));
+        tag.setBorder(BorderFactory.createEmptyBorder(
+                GAP / 2, GAP + GAP / 2, GAP / 2, GAP + GAP / 2));
         return tag;
     }
 
