@@ -13,6 +13,8 @@ public final class ViewNames {
     public static final String FRIENDS = "friends";
     /** The add expense screen. */
     public static final String EXPENSE = "expense";
+    /** Name of the notifications screen. */
+    public static final String NOTIFICATIONS = "notifications";
 
     private ViewNames() {
     }
