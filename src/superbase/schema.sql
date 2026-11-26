@@ -13,7 +13,8 @@ create table if not exists friendships (
     id uuid primary key default gen_random_uuid(),
     requested_by uuid not null references users(id) on delete cascade,
     sent_to uuid not null references users(id) on delete cascade,
-    status varchar(20) not null default 'SENT_REQUEST',
+    status varchar(20) not null default 'PENDING'
+        check (status in ('PENDING', 'ADDED')),
     added_at timestamptz,
     unique (requested_by, sent_to),
     check (requested_by <> sent_to)

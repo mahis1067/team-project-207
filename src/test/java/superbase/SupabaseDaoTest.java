@@ -2,8 +2,6 @@ package superbase;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -47,10 +45,10 @@ class SupabaseDaoTest {
     /**
      * Optionally removes all users created by this test class.
      *
-     * <p>Run {@code mvn -Dtest=SupabaseDaoTest test} from a terminal. After the
-     * tests finish, review the printed user IDs and type {@code delete} followed
-     * by Enter to remove the test users. Press Enter without typing {@code delete}
-     * to keep the users in the database for inspection in Supabase.</p>
+     * <p>By default, test users are kept. Run
+     * {@code mvn "-Dtest=SupabaseDaoTest" "-DdeleteTestUsers=y" test} to remove
+     * users created during that run, or set {@code -DdeleteTestUsers=n} to keep
+     * them explicitly.</p>
      *
      * @throws Exception if the test database cleanup fails
      */
@@ -62,17 +60,18 @@ class SupabaseDaoTest {
 
         System.out.println("Created test users:");
         CREATED_USERS.forEach(userId -> System.out.println("  " + userId));
-        System.out.print("Type 'delete' and press Enter to remove them, or press Enter to keep them: ");
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String command = reader.readLine();
-        if ("delete".equalsIgnoreCase(command == null ? "" : command.trim())) {
+        String answer = System.getProperty("deleteTestUsers", "n").trim();
+        if ("y".equalsIgnoreCase(answer)) {
             SupabaseUserDao users = new SupabaseUserDao(new PostgresDataSource());
             for (UUID userId : CREATED_USERS) {
                 users.deleteById(userId);
             }
             System.out.println("Test users deleted.");
-        } else {
+        } else if ("n".equalsIgnoreCase(answer)) {
             System.out.println("Test users kept in the database.");
+        } else {
+            throw new IllegalArgumentException(
+                    "Invalid -DdeleteTestUsers value; use y or n.");
         }
     }
 
@@ -104,7 +103,7 @@ class SupabaseDaoTest {
     @Test
     void friendRequestCanBeAccepted() throws Exception {
         UUID id = friendships.sendRequest(userA, userB);
-        assertEquals("SENT_REQUEST", friendships.getStatus(id));
+        assertEquals("PENDING", friendships.getStatus(id));
         friendships.accept(id);
         assertEquals("ADDED", friendships.getStatus(id));
     }
@@ -117,7 +116,7 @@ class SupabaseDaoTest {
     @Test
     void friendRequestCanBeDenied() throws Exception {
         friendships.sendRequest(userA, userB);
-        assertEquals("SENT_REQUEST", friendships.getStatusByUsers(userB, userA));
+        assertEquals("PENDING", friendships.getStatusByUsers(userB, userA));
         friendships.deny(userB, userA);
         assertNull(friendships.getStatusByUsers(userB, userA));
     }
