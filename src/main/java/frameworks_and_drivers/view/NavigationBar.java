@@ -51,6 +51,7 @@ class NavigationBar extends JPanel {
         addItem("Dashboard", ViewNames.DASHBOARD);
         addItem("Friends", ViewNames.FRIENDS);
         addItem("Add expense", ViewNames.EXPENSE);
+        addItem("Notifications", ViewNames.NOTIFICATIONS);
     }
 
     private void addItem(String text, String viewName) {

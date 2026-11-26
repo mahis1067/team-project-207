@@ -1,19 +1,15 @@
 package app;
 
-import frameworks_and_drivers.view.ViewManager;
+import frameworks_and_drivers.view.*;
 import interface_adapters.view_manager.ViewManagerModel;
 import java.awt.CardLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import frameworks_and_drivers.view.LoginView;
+
 import interface_adapters.login.LoginViewModel;
 import interface_adapters.view_manager.ViewNames;
-import frameworks_and_drivers.view.SignupView;
 import interface_adapters.signup.SignUpViewModel;
-import frameworks_and_drivers.view.DashboardView;
 import interface_adapters.logout.LogoutViewModel;
-import frameworks_and_drivers.view.FriendsView;
-import frameworks_and_drivers.view.ExpenseView;
 import app_business_rules.PasswordHasher;
 import app_business_rules.login.LoginInteractor;
 import app_business_rules.logout.LogoutInteractor;
@@ -127,6 +123,17 @@ public class AppBuilder {
      */
     public AppBuilder addExpenseView() {
         views.add(new ExpenseView(viewManagerModel), ViewNames.EXPENSE);
+        return this;
+    }
+    /**
+     * Adds the notifications screen.
+     *
+     * @return this builder
+     */
+    public AppBuilder addNotificationsView() {
+        NotificationsView notificationsView =
+                new NotificationsView(viewManagerModel);
+        views.add(notificationsView, ViewNames.NOTIFICATIONS);
         return this;
     }
 

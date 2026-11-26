@@ -22,6 +22,7 @@ public final class Main {
                     .addDashboardView()
                     .addFriendsView()
                     .addExpenseView()
+                    .addNotificationsView()
                     .addAuthUseCases()
                     .build();
             app.setVisible(true);
