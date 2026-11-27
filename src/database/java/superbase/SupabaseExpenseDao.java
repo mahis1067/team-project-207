@@ -2,6 +2,7 @@ package superbase;
 
 import entities.expenses.Expense;
 import entities.users.User;
+import entities.users.UserFactory;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,7 +47,7 @@ public class SupabaseExpenseDao {
         if (!result.next()) {
           return null;
         }
-        return new User(userId, result.getString("username"), null,
+        return UserFactory.create(userId, result.getString("username"), null,
                 result.getString("first_name"), result.getString("last_name"), new ArrayList<>());
       }
     }

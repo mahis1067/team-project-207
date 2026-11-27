@@ -1,6 +1,13 @@
 package interface_adapters.persistence;
 
+import app_business_rules.PasswordHasher;
+import app_business_rules.login.LoginInputData;
+import app_business_rules.login.LoginInteractor;
+import app_business_rules.login.LoginOutputBoundary;
+import app_business_rules.login.LoginOutputData;
+import app_business_rules.refresh.RefreshInputBoundary;
 import entities.users.User;
+import interface_adapters.session.InMemorySessionState;
 import org.junit.jupiter.api.Test;
 import superbase.PostgresDataSource;
 import superbase.SupabaseUserDao;
@@ -57,6 +64,51 @@ class SupabaseAuthDataAccessTest {
         assertEquals("hashed_password", user.getPasswordHash());
         assertEquals("Test", user.getFirstName());
         assertEquals("User", user.getLastName());
+    }
+
+    /** Loads the database user through the adapter and completes the login use case. */
+    @Test
+    void loginUsesUserCreatedFromDatabaseRow() {
+        FakeUserDao dao = new FakeUserDao();
+        SupabaseAuthDataAccess adapter = new SupabaseAuthDataAccess(dao);
+        InMemorySessionState session = new InMemorySessionState();
+        LoginOutputData[] success = new LoginOutputData[1];
+        String[] failure = new String[1];
+        int[] refreshCount = {0};
+        LoginOutputBoundary presenter = new LoginOutputBoundary() {
+            @Override
+            public void prepareSuccessView(LoginOutputData outputData) {
+                success[0] = outputData;
+            }
+
+            @Override
+            public void prepareFailView(String message) {
+                failure[0] = message;
+            }
+        };
+        PasswordHasher passwordHasher = new PasswordHasher() {
+            @Override
+            public String hash(String password) {
+                return "hashed_" + password;
+            }
+
+            @Override
+            public boolean verify(String password, String passwordHash) {
+                return "password123".equals(password)
+                        && "hashed_password".equals(passwordHash);
+            }
+        };
+        RefreshInputBoundary refresh = data -> refreshCount[0]++;
+        LoginInteractor interactor = new LoginInteractor(
+                adapter, presenter, passwordHasher, refresh, session);
+
+        interactor.execute(new LoginInputData("testuser", "password123"));
+
+        assertNull(failure[0]);
+        assertNotNull(success[0]);
+        assertEquals(dao.databaseId, success[0].getUserId());
+        assertEquals(dao.databaseId, session.getCurrentUserId());
+        assertEquals(1, refreshCount[0]);
     }
 
     @Test

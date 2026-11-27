@@ -2,10 +2,12 @@ package superbase;
 
 import app_buisness_rules.friend_requests.SendFriendRequestDataAccessInterface;
 import entities.users.Friendship;
+import entities.users.FriendshipFactory;
 import entities.users.FriendshipStatus;
 import entities.users.User;
+import entities.users.UserFactory;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.UUID;
 
 /** Supabase data-access implementation for sending friend requests. */
@@ -28,13 +30,13 @@ public class SupabaseSendFriendRequestDataAccess
   public User getUserByUsername(String username) {
     try {
       return userDao.findByUsername(username)
-          .map(row -> new User(
+          .map(row -> UserFactory.create(
               row.id(),
               row.username(),
               row.passwordHash(),
               row.firstName(),
               row.lastName(),
-              new ArrayList<>()))
+              Collections.emptyList()))
           .orElse(null);
     } catch (SQLException exception) {
       throw new FriendRequestDatabaseException(
@@ -53,9 +55,9 @@ public class SupabaseSendFriendRequestDataAccess
       if (status == null) {
         return null;
       }
-      User sender = new User(senderId, "", "", "", "", new ArrayList<>());
-      User receiver = new User(receiverId, "", "", "", "", new ArrayList<>());
-      return new Friendship(
+      User sender = UserFactory.create(senderId, "", "", "", "", Collections.emptyList());
+      User receiver = UserFactory.create(receiverId, "", "", "", "", Collections.emptyList());
+      return FriendshipFactory.create(
           sender,
           receiver,
           FriendshipStatus.valueOf(status),

@@ -1,8 +1,8 @@
 package interface_adapters.persistence;
 
 import entities.users.User;
+import entities.users.UserFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,17 +33,12 @@ public final class UserMapper {
             String lastName,
             List<UUID> friendships) {
 
-        if (userId == null || friendships == null) {
-            throw new IllegalArgumentException(
-                    "User ID and friendships cannot be null.");
-        }
-
-        return new User(
+        return UserFactory.create(
                 userId,
                 username,
                 passwordHash,
                 firstName,
                 lastName,
-                new ArrayList<>(friendships));
+                friendships);
     }
 }
