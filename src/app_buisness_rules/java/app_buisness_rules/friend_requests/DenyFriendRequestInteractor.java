@@ -54,7 +54,19 @@ public class DenyFriendRequestInteractor implements DenyFriendRequestInputBounda
         presenter.prepareFailView("Friend request not found.");
         return;
       }
-      dataAccess.deleteFriendship(input.userId(), input.requesterId());
+      if (friendship.getStatus()
+          != entities.users.FriendshipStatus.SENT_REQUEST) {
+        presenter.prepareFailView("Friend request is not pending.");
+        return;
+      }
+
+      if (!dataAccess.deleteFriendship(
+          input.userId(), input.requesterId())) {
+        presenter.prepareFailView(
+            "Friend request was already handled.");
+        return;
+      }
+
       if (notifications != null) {
         try {
           notifications.friendRequestDenied(input.userId(), input.requesterId());

@@ -20,5 +20,5 @@ public interface DenyFriendRequestDataAccessInterface {
    * @param userId the receiving user id
    * @param requesterId the requesting user id
    */
-  void deleteFriendship(UUID userId, UUID requesterId);
+  boolean deleteFriendship(UUID userId, UUID requesterId);
 }

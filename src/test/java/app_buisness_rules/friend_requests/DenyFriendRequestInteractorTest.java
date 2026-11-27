@@ -87,8 +87,9 @@ class DenyFriendRequestInteractorTest {
               }
 
               @Override
-              public void deleteFriendship(
+              public boolean deleteFriendship(
                   UUID userId, UUID requesterId) {
+                return true;
               }
             },
             presenter);
@@ -119,9 +120,10 @@ class DenyFriendRequestInteractorTest {
     }
 
     @Override
-    public void deleteFriendship(UUID userId, UUID requesterId) {
+    public boolean deleteFriendship(UUID userId, UUID requesterId) {
       deletedUserId = userId;
       deletedRequesterId = requesterId;
+      return true;
     }
   }
 

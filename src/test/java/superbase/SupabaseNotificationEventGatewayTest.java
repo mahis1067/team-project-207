@@ -105,6 +105,70 @@ class SupabaseNotificationEventGatewayTest {
     assertEquals(0, sink.count);
   }
 
+  @Test
+  void invalidFriendRequestUsersDoNotPublish() {
+    RecordingSink sink = new RecordingSink();
+    SupabaseNotificationEventGateway gateway =
+        new SupabaseNotificationEventGateway(sink);
+
+    UUID user = UUID.randomUUID();
+
+    assertThrows(IllegalArgumentException.class,
+        () -> gateway.friendRequestSent(null, user));
+    assertThrows(IllegalArgumentException.class,
+        () -> gateway.friendRequestSent(user, null));
+    assertThrows(IllegalArgumentException.class,
+        () -> gateway.friendRequestSent(user, user));
+
+    assertThrows(IllegalArgumentException.class,
+        () -> gateway.friendRequestDenied(null, user));
+    assertThrows(IllegalArgumentException.class,
+        () -> gateway.friendRequestDenied(user, null));
+    assertThrows(IllegalArgumentException.class,
+        () -> gateway.friendRequestDenied(user, user));
+
+    assertEquals(0, sink.count);
+  }
+
+  @Test
+  void expenseWithNoPayerParticipantDoesNotPublish() {
+    RecordingSink sink = new RecordingSink();
+    User payer = user("payer");
+    User first = user("first");
+    User second = user("second");
+
+    Expense expense = new Expense(
+        UUID.randomUUID(), "Invalid participants", 15.0,
+        payer, payer, List.of(first, second),
+        LocalDateTime.now(), "pending");
+
+    assertThrows(IllegalArgumentException.class,
+        () -> new SupabaseNotificationEventGateway(sink)
+            .expenseAdded(expense));
+
+    assertEquals(0, sink.count);
+  }
+
+  @Test
+  void expensePayloadEscapesBackslashesAndControlCharacters() {
+    RecordingSink sink = new RecordingSink();
+    User payer = user("payer");
+    User other = user("other");
+
+    Expense expense = new Expense(
+        UUID.randomUUID(), "Path \\ receipt" + (char) 1,
+        20.0, payer, payer, List.of(payer, other),
+        LocalDateTime.now(), "pending");
+
+    new SupabaseNotificationEventGateway(sink)
+        .expenseAdded(expense);
+
+    assertEquals(1, sink.count);
+    assertTrue(sink.payload.contains("\\\\ receipt"));
+    assertTrue(sink.payload.contains("\\u0001"));
+    assertFalse(sink.payload.contains(String.valueOf((char) 1)));
+  }
+
   private static User user(String username) {
     return new User(
         UUID.randomUUID(), username, "", "", "",

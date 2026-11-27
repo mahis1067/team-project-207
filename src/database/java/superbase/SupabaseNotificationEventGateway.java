@@ -40,12 +40,14 @@ public class SupabaseNotificationEventGateway
 
   @Override
   public void friendRequestSent(UUID senderId, UUID receiverId) {
+    validateUsers(senderId, receiverId);
     publish(senderId, receiverId, "NEW_FRIEND_REQUEST",
         "{\"senderId\":" + jsonString(senderId.toString()) + "}");
   }
 
   @Override
   public void friendRequestDenied(UUID senderId, UUID receiverId) {
+    validateUsers(senderId, receiverId);
     publish(senderId, receiverId, "FRIEND_REQUEST_DENIED",
         "{\"senderId\":" + jsonString(senderId.toString()) + "}");
   }
@@ -69,12 +71,15 @@ public class SupabaseNotificationEventGateway
     }
 
     UUID receiverId = null;
+    boolean payerPresent = false;
     for (User participant : participants) {
       if (participant == null || participant.getUserId() == null) {
         throw new IllegalArgumentException("Invalid expense participant.");
       }
       UUID participantId = participant.getUserId();
-      if (!participantId.equals(payerId)) {
+      if (participantId.equals(payerId)) {
+        payerPresent = true;
+      } else {
         if (receiverId != null) {
           throw new IllegalArgumentException(
               "Expense must have one other participant.");
@@ -83,9 +88,9 @@ public class SupabaseNotificationEventGateway
       }
     }
 
-    if (receiverId == null) {
+    if (!payerPresent || receiverId == null) {
       throw new IllegalArgumentException(
-          "Expense must have another participant.");
+          "Expense must include payer and one other participant.");
     }
 
     String payload = "{"
@@ -99,13 +104,17 @@ public class SupabaseNotificationEventGateway
     publish(payerId, receiverId, "NEW_EXPENSE_ADDED", payload);
   }
 
-  private void publish(UUID senderId, UUID receiverId,
-                       String type, String payload) {
+  private static void validateUsers(UUID senderId, UUID receiverId) {
     if (senderId == null || receiverId == null
         || senderId.equals(receiverId)) {
       throw new IllegalArgumentException(
           "Notification requires two different users.");
     }
+  }
+
+  private void publish(UUID senderId, UUID receiverId,
+                       String type, String payload) {
+    validateUsers(senderId, receiverId);
 
     try {
       sink.send(senderId, receiverId, type, payload);

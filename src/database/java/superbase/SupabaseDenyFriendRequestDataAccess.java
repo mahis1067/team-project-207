@@ -43,9 +43,9 @@ public class SupabaseDenyFriendRequestDataAccess
   }
 
   @Override
-  public void deleteFriendship(UUID userId, UUID requesterId) {
+  public boolean deleteFriendship(UUID userId, UUID requesterId) {
     try {
-      friendshipDao.deny(userId, requesterId);
+      return friendshipDao.deny(userId, requesterId);
     } catch (SQLException exception) {
       throw new FriendRequestDatabaseException(
           "Unable to deny friend request.", exception);

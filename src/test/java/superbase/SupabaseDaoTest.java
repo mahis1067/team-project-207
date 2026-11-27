@@ -134,7 +134,15 @@ class SupabaseDaoTest {
         assertEquals(1, inbox.size());
         assertEquals("FRIEND_REQUEST", inbox.get(0).type());
         assertTrue(notifications.getUnread(userA).isEmpty());   // sender has nothing
-        notifications.markRead(inbox.get(0).id());
+        assertEquals(userB, inbox.get(0).receiverId());
+        assertFalse(inbox.get(0).read());
+        assertNotNull(inbox.get(0).createdAt());
+
+        assertFalse(notifications.markRead(inbox.get(0).id(), userA));
+        assertEquals(1, notifications.getUnread(userB).size());
+
+        assertTrue(notifications.markRead(inbox.get(0).id(), userB));
+        assertFalse(notifications.markRead(inbox.get(0).id(), userB));
         assertTrue(notifications.getUnread(userB).isEmpty());
     }
 }

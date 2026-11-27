@@ -56,16 +56,19 @@ public class SupabaseFriendshipDao {
      * Deletes a pending friendship request for the two users.
      * @param userId receiving user id
      * @param requesterId requesting user id
+     * @return true only when one pending request was deleted
      * @throws SQLException on database error
      */
-    public void deny(UUID userId, UUID requesterId) throws SQLException {
+    public boolean deny(UUID userId, UUID requesterId)
+            throws SQLException {
         String sql = "delete from friendships "
-                + "where sent_to = ? and requested_by = ?";
+                + "where sent_to = ? and requested_by = ? "
+                + "and status = 'SENT_REQUEST'";
         try (Connection c = source.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setObject(1, userId);
             ps.setObject(2, requesterId);
-            ps.executeUpdate();
+            return ps.executeUpdate() == 1;
         }
     }
 

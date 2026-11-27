@@ -91,6 +91,53 @@ class DenyFriendRequestNotificationTest {
     assertNull(presenter.failure);
   }
 
+  @Test
+  void acceptedFriendshipCannotBeDenied() {
+    FakeFriendshipDataAccess dataAccess =
+        new FakeFriendshipDataAccess();
+    FakeNotifications notifications = new FakeNotifications();
+    RecordingPresenter presenter = new RecordingPresenter();
+    UUID userId = UUID.randomUUID();
+    UUID requesterId = UUID.randomUUID();
+
+    dataAccess.friendship = pendingFriendship(userId, requesterId);
+    dataAccess.friendship.accept();
+
+    new DenyFriendRequestInteractor(
+        dataAccess, presenter, notifications)
+        .execute(new DenyFriendRequestInputData(
+            userId, requesterId));
+
+    assertNull(dataAccess.deletedUserId);
+    assertEquals(0, notifications.deniedCount);
+    assertNull(presenter.success);
+    assertEquals("Friend request is not pending.", presenter.failure);
+  }
+
+  @Test
+  void concurrentDeletionDoesNotPublishNotification() {
+    FakeFriendshipDataAccess dataAccess =
+        new FakeFriendshipDataAccess();
+    FakeNotifications notifications = new FakeNotifications();
+    RecordingPresenter presenter = new RecordingPresenter();
+    UUID userId = UUID.randomUUID();
+    UUID requesterId = UUID.randomUUID();
+
+    dataAccess.friendship = pendingFriendship(userId, requesterId);
+    dataAccess.noRowsDeleted = true;
+
+    new DenyFriendRequestInteractor(
+        dataAccess, presenter, notifications)
+        .execute(new DenyFriendRequestInputData(
+            userId, requesterId));
+
+    assertEquals(0, notifications.deniedCount);
+    assertNull(presenter.success);
+    assertEquals(
+        "Friend request was already handled.",
+        presenter.failure);
+  }
+
   private static Friendship pendingFriendship(
       UUID userId, UUID requesterId) {
     User requester = new User(
@@ -108,6 +155,7 @@ class DenyFriendRequestNotificationTest {
     private UUID deletedUserId;
     private UUID deletedRequesterId;
     private boolean failOnDelete;
+    private boolean noRowsDeleted;
 
     @Override
     public Friendship getFriendship(UUID userId, UUID requesterId) {
@@ -115,12 +163,16 @@ class DenyFriendRequestNotificationTest {
     }
 
     @Override
-    public void deleteFriendship(UUID userId, UUID requesterId) {
+    public boolean deleteFriendship(UUID userId, UUID requesterId) {
       if (failOnDelete) {
         throw new IllegalStateException("Friendship deletion failed.");
       }
+      if (noRowsDeleted) {
+        return false;
+      }
       deletedUserId = userId;
       deletedRequesterId = requesterId;
+      return true;
     }
   }
 
