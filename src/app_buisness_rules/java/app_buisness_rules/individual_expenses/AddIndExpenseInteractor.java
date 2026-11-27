@@ -2,6 +2,8 @@ package app_buisness_rules.individual_expenses;
 
 import app_business_rules.logout.SessionState;
 import entities.expenses.Expense;
+import entities.expenses.ExpenseDetails;
+import entities.expenses.ExpenseFactory;
 import entities.users.User;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -73,9 +75,15 @@ public class AddIndExpenseInteractor implements AddIndExpenseInputBoundary {
       List<User> participants = new ArrayList<>();
       participants.add(payer);
       participants.add(otherParticipant);
-      expense = new Expense(
-              UUID.randomUUID(), description, amount, payer, payer,
-              participants, LocalDateTime.now(ZoneOffset.UTC), "pending");
+      expense = ExpenseFactory.create(new ExpenseDetails(
+          UUID.randomUUID(),
+          description,
+          amount,
+          payer,
+          payer,
+          participants,
+          LocalDateTime.now(ZoneOffset.UTC),
+          "pending"));
       dataAccess.saveExpense(expense);
     } catch (IllegalStateException exception) {
       presenter.prepareFailView("Unable to save the expense.");

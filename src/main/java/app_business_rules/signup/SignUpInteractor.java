@@ -6,6 +6,7 @@ import app_business_rules.refresh.RefreshInputBoundary;
 import app_business_rules.refresh.RefreshInputData;
 import app_business_rules.refresh.RefreshFailureException;
 import entities.users.User;
+import entities.users.UserFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,7 +66,7 @@ public class SignUpInteractor implements SignUpInputBoundary {
 
         UUID userId = UUID.randomUUID();
 
-        User user = new User(
+        User user = UserFactory.create(
                 userId,
                 inputData.getUsername(),
                 passwordHash,

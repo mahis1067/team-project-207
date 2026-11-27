@@ -2,10 +2,12 @@ package superbase;
 
 import app_buisness_rules.friend_requests.DenyFriendRequestDataAccessInterface;
 import entities.users.Friendship;
+import entities.users.FriendshipFactory;
 import entities.users.FriendshipStatus;
 import entities.users.User;
+import entities.users.UserFactory;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.UUID;
 
 /** Supabase data-access implementation for denying friend requests. */
@@ -29,9 +31,10 @@ public class SupabaseDenyFriendRequestDataAccess
       if (status == null) {
         return null;
       }
-      User requester = new User(requesterId, "", "", "", "", new ArrayList<>());
-      User receiver = new User(userId, "", "", "", "", new ArrayList<>());
-      return new Friendship(
+      User requester = UserFactory.create(
+          requesterId, "", "", "", "", Collections.emptyList());
+      User receiver = UserFactory.create(userId, "", "", "", "", Collections.emptyList());
+      return FriendshipFactory.create(
           requester,
           receiver,
           FriendshipStatus.valueOf(status),

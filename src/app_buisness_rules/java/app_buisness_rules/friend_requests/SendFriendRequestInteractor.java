@@ -1,9 +1,12 @@
 package app_buisness_rules.friend_requests;
 
 import entities.users.Friendship;
+import entities.users.FriendshipFactory;
 import entities.users.FriendshipStatus;
 import entities.users.User;
+import entities.users.UserFactory;
 import java.time.LocalDateTime;
+import java.util.Collections;
 
 /** Interactor for sending a friend request. */
 public class SendFriendRequestInteractor implements SendFriendRequestInputBoundary {
@@ -47,9 +50,9 @@ public class SendFriendRequestInteractor implements SendFriendRequestInputBounda
         presenter.prepareFailView("A friendship or friend request already exists.");
         return;
       }
-      User sender = new User(
-          input.senderId(), "", "", "", "", java.util.Collections.emptyList());
-      Friendship friendship = new Friendship(
+      User sender = UserFactory.create(
+          input.senderId(), "", "", "", "", Collections.emptyList());
+      Friendship friendship = FriendshipFactory.create(
           sender,
           receiver,
           FriendshipStatus.SENT_REQUEST,
