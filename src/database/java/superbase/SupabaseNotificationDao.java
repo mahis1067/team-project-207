@@ -28,7 +28,7 @@ public class SupabaseNotificationDao {
             String payload,
             UUID receiverId,
             boolean read,
-            Instant createdAt) { }
+            Instant createdAt) {}
 
     /**
      * Sends a notification to another user.
