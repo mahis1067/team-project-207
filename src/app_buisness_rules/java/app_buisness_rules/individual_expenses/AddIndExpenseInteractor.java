@@ -1,5 +1,6 @@
 package app_buisness_rules.individual_expenses;
 
+import app_buisness_rules.notifications.NotificationEventGateway;
 import app_business_rules.logout.SessionState;
 import entities.expenses.Expense;
 import entities.users.User;
@@ -17,6 +18,7 @@ public class AddIndExpenseInteractor implements AddIndExpenseInputBoundary {
   private final SessionState session;
   private final AddIndExpenseDataAccessInterface dataAccess;
   private final AddIndExpenseOutputBoundary presenter;
+  private final NotificationEventGateway notifications;
 
   /**
    * Creates the expense interactor.
@@ -29,9 +31,26 @@ public class AddIndExpenseInteractor implements AddIndExpenseInputBoundary {
           AddIndExpenseDataAccessInterface dataAccess,
           SessionState session,
           AddIndExpenseOutputBoundary presenter) {
+    this(dataAccess, session, presenter, null);
+  }
+
+  /**
+   * Creates the expense interactor with notification publishing.
+   *
+   * @param dataAccess access to stored expense information
+   * @param session the current login session
+   * @param presenter receives the result of the request
+   * @param notifications notification event gateway
+   */
+  public AddIndExpenseInteractor(
+          AddIndExpenseDataAccessInterface dataAccess,
+          SessionState session,
+          AddIndExpenseOutputBoundary presenter,
+          NotificationEventGateway notifications) {
     this.dataAccess = dataAccess;
     this.session = session;
     this.presenter = presenter;
+    this.notifications = notifications;
   }
 
   @Override
@@ -80,6 +99,18 @@ public class AddIndExpenseInteractor implements AddIndExpenseInputBoundary {
     } catch (IllegalStateException exception) {
       presenter.prepareFailView("Unable to save the expense.");
       return;
+    }
+    if (notifications != null) {
+      try {
+        notifications.expenseAdded(expense);
+      } catch (RuntimeException notificationFailure) {
+        // Expense was saved; notification delivery is best-effort.
+        java.util.logging.Logger.getLogger(
+            AddIndExpenseInteractor.class.getName())
+            .log(java.util.logging.Level.WARNING,
+                "Expense saved, but notification publishing failed.",
+                notificationFailure);
+      }
     }
     presenter.prepareSuccessView(
             new AddIndExpenseOutputData(expense.getExpenseId(), description, amount));

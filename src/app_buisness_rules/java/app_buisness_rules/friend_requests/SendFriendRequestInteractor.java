@@ -1,5 +1,6 @@
 package app_buisness_rules.friend_requests;
 
+import app_buisness_rules.notifications.NotificationEventGateway;
 import entities.users.Friendship;
 import entities.users.FriendshipStatus;
 import entities.users.User;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 public class SendFriendRequestInteractor implements SendFriendRequestInputBoundary {
   private final SendFriendRequestDataAccessInterface dataAccess;
   private final SendFriendRequestOutputBoundary presenter;
+  private final NotificationEventGateway notifications;
 
   /**
    * Creates the send-friend-request interactor.
@@ -19,8 +21,23 @@ public class SendFriendRequestInteractor implements SendFriendRequestInputBounda
   public SendFriendRequestInteractor(
       SendFriendRequestDataAccessInterface dataAccess,
       SendFriendRequestOutputBoundary presenter) {
+    this(dataAccess, presenter, null);
+  }
+
+  /**
+   * Creates an interactor with notification publishing.
+   *
+   * @param dataAccess friendship persistence
+   * @param presenter output presenter
+   * @param notifications notification event gateway
+   */
+  public SendFriendRequestInteractor(
+      SendFriendRequestDataAccessInterface dataAccess,
+      SendFriendRequestOutputBoundary presenter,
+      NotificationEventGateway notifications) {
     this.dataAccess = dataAccess;
     this.presenter = presenter;
+    this.notifications = notifications;
   }
 
   @Override
@@ -55,6 +72,18 @@ public class SendFriendRequestInteractor implements SendFriendRequestInputBounda
           FriendshipStatus.SENT_REQUEST,
           LocalDateTime.now());
       dataAccess.saveFriendship(friendship);
+      if (notifications != null) {
+        try {
+          notifications.friendRequestSent(input.senderId(), receiver.getUserId());
+        } catch (RuntimeException notificationFailure) {
+          // Friendship was saved; notification delivery is best-effort.
+          java.util.logging.Logger.getLogger(
+              SendFriendRequestInteractor.class.getName())
+              .log(java.util.logging.Level.WARNING,
+                  "Friend request saved, but notification publishing failed.",
+                  notificationFailure);
+        }
+      }
       presenter.prepareSuccessView(
           new SendFriendRequestOutputData(
               input.senderId(),
